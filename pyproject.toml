@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "cls"
+version = "0.1.0"
+description = "Multi program code directory selector"
+authors = ["Kevin Baker <kevinbaker42@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.scripts]
+cls = 'cls.main:start'
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
