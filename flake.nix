@@ -18,6 +18,8 @@
           packages = with pkgs.${system}; [
             (poetry2nix.mkPoetryEnv { projectDir = self; })
             poetry
+            rofi
+            nemo
           ];
         };
       });
