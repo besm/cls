@@ -3,26 +3,22 @@
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 # Set the root directory to search and define the Rofi theme to use
-root_dir = os.path.expanduser("~/code")
-rofi_theme = os.path.expanduser("~/code/themes/redblack.rasi")
+root_dir = Path("~/code").expanduser()
+rofi_theme = Path("~/code/themes/redblack.rasi").expanduser()
 
 # Get a list of all subdirectories in the root directory that are not hidden, have subdirectories,
 # and have at least one file or symlink in them, and do not contain .git or __pycache__
-all_subdirs = []
-for root, dirs, files in os.walk(root_dir):
-    if (not os.path.basename(root).startswith(".")) and (not os.path.basename(root) == "__pycache__"):
-        # Exclude directories containing .git or __pycache__
-        if not any(".git" in d for d in dirs) and not any("__pycache__" in d for d in dirs):
-            for subdir in dirs:
-                subdir_path = os.path.join(root, subdir)
-                if os.path.isdir(subdir_path) and os.listdir(subdir_path):
-                    all_subdirs.append(subdir_path)
+all_subdirs = [
+    str(subdir) for subdir in root_dir.glob("**/*")
+    if subdir.is_dir() and not any(name in str(subdir) for name in [".git", "__pycache__"])
+]
 
 # Sort the list of directories alphabetically and use rofi to display a menu of them
 selected_dir = subprocess.check_output(
-    ["rofi", "-dmenu", "-p", "Select directory:", "-format", "s", "-theme", rofi_theme],
+    ["rofi", "-dmenu", "-p", "Select directory:", "-format", "s", "-theme", str(rofi_theme)],
     input="\n".join(sorted(all_subdirs)),
     text=True,
 ).strip()
@@ -41,7 +37,7 @@ selected_app = subprocess.check_output(
         "-format",
         "s",
         "-theme",
-        rofi_theme,
+        str(rofi_theme),
     ],
     input="Visual Studio Code\nNemo\nAlacritty",
     text=True,
