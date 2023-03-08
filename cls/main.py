@@ -9,14 +9,16 @@ root_dir = os.path.expanduser("~/code")
 rofi_theme = os.path.expanduser("~/code/themes/redblack.rasi")
 
 # Get a list of all subdirectories in the root directory that are not hidden, have subdirectories,
-# and have at least one file or symlink in them
-all_subdirs = [
-    subdir_path for root, dirs, files in os.walk(root_dir)
-    if not os.path.basename(root).startswith(".") and not os.path.basename(root) in ["__pycache__", ".git"]
-    for subdir in dirs
-    for subdir_path in [os.path.join(root, subdir)]
-    if os.path.isdir(subdir_path) and not subdir.startswith(".") and os.listdir(subdir_path)
-]
+# and have at least one file or symlink in them, and do not contain .git or __pycache__
+all_subdirs = []
+for root, dirs, files in os.walk(root_dir):
+    if (not os.path.basename(root).startswith(".")) and (not os.path.basename(root) == "__pycache__"):
+        # Exclude directories containing .git or __pycache__
+        if not any(".git" in d for d in dirs) and not any("__pycache__" in d for d in dirs):
+            for subdir in dirs:
+                subdir_path = os.path.join(root, subdir)
+                if os.path.isdir(subdir_path) and os.listdir(subdir_path):
+                    all_subdirs.append(subdir_path)
 
 # Sort the list of directories alphabetically and use rofi to display a menu of them
 selected_dir = subprocess.check_output(
