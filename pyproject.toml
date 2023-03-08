@@ -10,7 +10,7 @@ python = "^3.10"
 
 [tool.poetry.scripts]
 cls = 'cls.main:start'
-rofi-menu = "^0.6"
+rofi-menu = "^0.2.2"
 
 [build-system]
 requires = ["poetry-core"]
